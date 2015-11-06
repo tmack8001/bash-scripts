@@ -34,6 +34,10 @@ alias gitsync="git pull upstream master; git push origin master"
 alias mci="mvn clean install"
 alias mcifast="mvn clean install -DskipTests=true"
 
+# aliases for docker
+alias docker-stopall="docker stop $(docker ps -a -q)"
+alias docker-rmall="docker rm $(docker ps -a -q)"
+
 ### the answer is does we second argument is higher
 function _ver_higher {
   ver=`echo -ne "$1\n$2" |sort -Vr |head -n1`
