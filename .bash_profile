@@ -4,9 +4,17 @@
 [[ -s ~/.bashrc ]] && source ~/.bashrc
 . $HOME/.bash/gitprompt.sh
 
+# homebrew bash-completion
+# $ brew install bash-completion
+# $ brew tap homebrew/completions
+# completion scripts: https://github.com/Homebrew/homebrew-completions
+if [ -f `brew --prefix`/etc/bash_completion ]; then
+  . `brew --prefix`/etc/bash_completion
+fi
+
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
-	. ~/.bashrc
+  . ~/.bashrc
 fi
 
 # aliasing
@@ -35,8 +43,12 @@ alias mci="mvn clean install"
 alias mcifast="mvn clean install -DskipTests=true"
 
 # aliases for docker
-alias docker-stopall="docker stop $(docker ps -a -q)"
-alias docker-rmall="docker rm $(docker ps -a -q)"
+#alias docker_stopall="docker stop $(docker ps -a -q)"
+#alias docker_removeall="docker rm $(docker ps -a -q)"
+dcleanup(){
+  docker rm -v $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+  docker rmi $(docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null
+}
 
 ### the answer is does we second argument is higher
 function _ver_higher {
@@ -58,6 +70,10 @@ function release() {
   fi
 }
 
+function version() {
+  mvn versions:set -DnewVersion=$1-SNAPSHOT; mvn versions:commit;
+}
+
 # aliases for curl
 alias curltime='curl -o /dev/null -s -w "@/Users/tmack/.bash/curltime-format.txt"'
 
@@ -67,6 +83,9 @@ PATH=$PATH:/usr/local/mysql/bin 	# add mysql commands in PATH
 PATH=$PATH:/usr/local/share/npm/bin	# add npm bin commands in PATH
 
 export PATH
+#export JAVA7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home
+#export JAVA8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home
+#export JAVA_HOME=$JAVA8_HOME
 export JAVA_HOME=$(/usr/libexec/java_home)
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
